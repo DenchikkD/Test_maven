@@ -2,3 +2,5 @@
 pom.xml
 test_maven.iml
 .idea/
+src/main/resources/
+target/
