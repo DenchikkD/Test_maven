@@ -35,7 +35,7 @@ public class MyHashMap<K, V> extends MyAbstractHashMap<K, V> implements MyMap<K,
 
     @Override
     public boolean equals(Object o) {
-
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         MyHashMap<?, ?> myHashMap = (MyHashMap<?, ?>) o;
@@ -62,12 +62,12 @@ public class MyHashMap<K, V> extends MyAbstractHashMap<K, V> implements MyMap<K,
         } else {
             MyEntry<K, V> entry = new MyEntry<K, V>(hash(key), key, element, null);
             MyEntry<K, V> position = arr[idx];
-            if (position.hash == entry.hash && (position.key == entry.key || position.key.equals(entry.key))) {
+            if (position.hash == entry.hash && checkEquality(position, entry.key)) {
                 position.value = entry.value;
             } else {
                 while (position.next != null) {
                     System.out.println(position.hash + " " + entry.hash);
-                    if (position.hash == entry.hash && (position.key == entry.key || position.key.equals(entry.key))) {
+                    if (position.hash == entry.hash && checkEquality(position, entry.key)) {
                         position.value = entry.value;
                     }
                     position = position.next;
@@ -95,7 +95,7 @@ public class MyHashMap<K, V> extends MyAbstractHashMap<K, V> implements MyMap<K,
         if (arr[idx] != null) {
             position = arr[idx];
             while (position != null) {
-                if (position.hash == hash(key) && (position.key == key || key.equals(position.key)))
+                if (position.hash == hash(key) && checkEquality(position, key))
                     return position;
                 position = position.next;
             }
@@ -103,10 +103,23 @@ public class MyHashMap<K, V> extends MyAbstractHashMap<K, V> implements MyMap<K,
         return position;
     }
 
+    private boolean checkEquality(MyEntry<K, V> position, K key) {
+        if (position.key == null || key == null) {
+            if (position.key == key) {
+                return true;
+            }
+        } else {
+            if (position.key.equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public V get(K key) {
-        MyEntry<K,V>element=findPosition(key);
-        if (element!=null){
+        MyEntry<K, V> element = findPosition(key);
+        if (element != null) {
             return element.value;
         }
         return null;
@@ -119,12 +132,37 @@ public class MyHashMap<K, V> extends MyAbstractHashMap<K, V> implements MyMap<K,
 
     @Override
     public boolean remove(K key) {
+        int idx = hash(key) % (arr.length - 1);
+        if (arr[idx] == null) {
+            return false;
+        } else {
+            MyEntry<K, V> position = arr[idx];
+            if (position.hash == hash(key) && checkEquality(position, key)) {
+                arr[idx] = position.next;
+                position.next = null;
+                return true;
+            } else {
+                while (position.next != null) {
+                    if (position.next.hash == hash(key) &&
+                            checkEquality(position.next, key)) {
+                        if (position.next.next != null) {
+                            position.next = position.next.next;
+                        } else {
+                            position.next = null;
+                        }
+                        return true;
+                    } else {
+                        position = position.next;
+                    }
+                }
+            }
+        }
         return false;
     }
 
     @Override
     public boolean containsKey(K key) {
-        return findPosition(key)!=null;
+        return findPosition(key) != null;
     }
 
     @Override
@@ -166,24 +204,25 @@ public class MyHashMap<K, V> extends MyAbstractHashMap<K, V> implements MyMap<K,
 
         @Override
         public K getKey() {
-            return null;
+            return key;
         }
 
         @Override
         public V getValue() {
-            return null;
+            return value;
         }
 
         @Override
-        public V setValue(V value) {
-            return null;
+        public V setValue(V newValue) {
+            V oldvalue = value;
+            value = newValue;
+            return oldvalue;
         }
     }
 
     public static void main(String[] args) {
 
     }
-
 
 
 }
