@@ -21,14 +21,21 @@ public class MyHashMapTest {
 //        assertEquals(expected,myHashMap.containsKey(""));
     }
     @Test
-    public void removeg(){
+    public void remove(){
         MyHashMap<String, Integer> myHashMap = new MyHashMap<>();
         boolean expected=false;
-        myHashMap.put(null,1);
-        assertEquals(expected,myHashMap.remove(""));
+        myHashMap.put("",16);
+        myHashMap.put("5",11);
+        myHashMap.put("17",61);
+        myHashMap.put("08",91);
+        myHashMap.put("45678",21);
+        myHashMap.put(null,31);
+        assertEquals(expected,myHashMap.remove("1"));
         expected=true;
-//        myHashMap.put(null,1);
         assertEquals(expected,myHashMap.remove(null));
+        assertEquals(expected,myHashMap.remove("08"));
+        assertFalse("no",myHashMap.remove("1"));
+        assertSame("BLA",false,myHashMap.remove(""));
     }
 
 

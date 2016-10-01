@@ -4,3 +4,8 @@ test_maven.iml
 .idea/
 src/main/resources/
 target/
+
+src/main/main.iml
+src/test/test.iml
+denis_kondratiuk.iml
+out/
