@@ -38,7 +38,7 @@ public class MyHashMapTest {
         assertEquals(expected, myHashMap.remove(null));
         assertEquals(expected, myHashMap.remove("08"));
         assertFalse("no", myHashMap.remove("1"));
-        assertSame("BLA", false, myHashMap.remove(""));
+        assertSame("BLA", true, myHashMap.remove(""));
     }
 
 
