@@ -55,28 +55,61 @@ public class MyHashMap<K, V> extends MyAbstractHashMap<K, V> implements MyMap<K,
 
     @Override
     public boolean put(K key, V element) {
-        int idx = hash(key) % (arr.length - 1);
-        if (arr[idx] == null) {
-            arr[idx] = new MyEntry<K, V>(hash(key), key, element, null);
-            size++;
+        System.out.println(arr.length);
+        if (size() >= arr.length * DEFAULT_LOAD_FACTOR) {
+            arr = newArray(arr);
         } else {
-            MyEntry<K, V> entry = new MyEntry<K, V>(hash(key), key, element, null);
-            MyEntry<K, V> position = arr[idx];
-            if (position.hash == entry.hash && checkEquality(position, entry.key)) {
-                position.value = entry.value;
-            } else {
-                while (position.next != null) {
-                    System.out.println(position.hash + " " + entry.hash);
-                    if (position.hash == entry.hash && checkEquality(position, entry.key)) {
-                        position.value = entry.value;
-                    }
-                    position = position.next;
-                }
-                position.next = entry;
+            int idx = hash(key) % (arr.length - 1);
+            if (arr[idx] == null) {
+                arr[idx] = new MyEntry<K, V>(hash(key), key, element, null);
                 size++;
+            } else {
+                MyEntry<K, V> entry = new MyEntry<K, V>(hash(key), key, element, null);
+                MyEntry<K, V> position = arr[idx];
+                if (position.hash == entry.hash && checkEquality(position, entry.key)) {
+                    position.value = entry.value;
+                } else {
+                    while (position.next != null) {
+                        System.out.println(position.hash + " " + entry.hash);
+                        if (position.hash == entry.hash && checkEquality(position, entry.key)) {
+                            position.value = entry.value;
+                        }
+                        position = position.next;
+                    }
+                    position.next = entry;
+                    size++;
+                }
             }
         }
         return true;
+    }
+
+    private MyEntry<K, V>[] newArray(MyEntry<K, V>[] oldAarray) {
+        MyEntry<K, V>[] newArr = (MyEntry<K, V>[]) new MyEntry[(int) (oldAarray.length * 2)];
+
+        for (int i = 0; i < oldAarray.length; i++) {
+            if (oldAarray[i] != null) {
+                MyEntry<K, V> position = oldAarray[i];
+                oldAarray[i] = null;
+                while (position != null) {
+                    int idx = hash(position.key)%(newArr.length-1);
+                    if (newArr[idx] == null) {
+                        newArr[idx] = position;
+                    } else {
+                        MyEntry<K, V> newArrPosition = newArr[idx];
+                        while (newArrPosition.next != null) {
+                            newArrPosition = newArrPosition.next;
+                        }
+                        newArrPosition.next = position;
+                    }
+                    MyEntry<K, V> oldPosition = position;
+                    position = position.next;
+                    oldPosition.next = null;
+                }
+            }
+        }
+
+        return newArr;
     }
 
     private int hash(K key) {
