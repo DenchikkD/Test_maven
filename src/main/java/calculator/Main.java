@@ -3,7 +3,7 @@ package calculator;
 /**
  * Created by Denni on 9/25/2016.
  */
-public class MainCalc {
+public class Main {
     private static OperationType operation;
     private static OperationWrapper wrapper;
     private static String result = "0";
