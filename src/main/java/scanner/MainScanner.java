@@ -9,38 +9,21 @@ import java.util.Scanner;
  */
 public class MainScanner {
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        MyScanner myScanner = new MyScanner(System.in);
-//        System.out.println(myScanner.next());
-//        System.out.println(scanner.next());
-        byte[] bufer = new byte[1024];
-        String stoks = "";
-        DataInputStream reader = new DataInputStream(System.in);
-        try {
+    public static void main(String[] args) throws FileNotFoundException {
+//        Scanner scanner = new Scanner(new File("D:\\projects/test_maven/FileDirectory/fileName1.txt"));
+        MyScanner myScanner = new MyScanner(new File("D:\\projects/test_maven/FileDirectory/fileName1.txt"));
+//        MyScanner myScanner = new MyScanner(System.in);
+//        Scanner intScaner = new Scanner(System.in);
+//        System.out.println(intScaner.nextInt());
+//        System.out.println(myScanner.nextInt());
 
-            reader.read(bufer);
-//            stoks =reader.readUTF();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        while (myScanner.hasNextInt()) {
+            System.out.println(myScanner.nextInt());
         }
-        char ch;
-        for (int i = 0; i < bufer.length; i++) {
-            ch = (char) (bufer[i]);
-            System.out.println(ch);
-            if (ch!=' '&&bufer[i]!=0){
-              stoks+=ch;
-            }else{
-                break;
-            }
+//        System.out.println(myScanner.nextInt());
 
-        }
 
-        System.out.println(Arrays.toString(bufer));
-        String str = new String(bufer);
-        System.out.println(str);
-        System.out.println(stoks);
 
 
     }
